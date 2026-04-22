@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import re
 from collections import Counter
 from dataclasses import dataclass
 from fractions import Fraction
@@ -75,30 +76,87 @@ class _SafeArithmeticEvaluator(ast.NodeVisitor):
         raise ValueError(f"disallowed syntax: {type(node).__name__}")
 
 
+_FRAC_RE = re.compile(r"\\d?frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}")
+
+
+def _delatex(s: str) -> str:
+    """Rewrite common LaTeX math fragments into plain arithmetic."""
+    # \frac{a}{b} -> (a)/(b); apply repeatedly to catch nested uses.
+    prev = None
+    while prev != s:
+        prev = s
+        s = _FRAC_RE.sub(r"(\1)/(\2)", s)
+
+    replacements = [
+        (r"\\times", "*"),
+        (r"\\cdot", "*"),
+        (r"\\div", "/"),
+        (r"\\left", ""),
+        (r"\\right", ""),
+        (r"\\[\[\]]", ""),
+        (r"\\\(", ""),
+        (r"\\\)", ""),
+        (r"\$", ""),
+    ]
+    for pat, repl in replacements:
+        s = re.sub(pat, repl, s)
+
+    # Strip stray backslashes and LaTeX brackets.
+    s = s.replace("\\[", "").replace("\\]", "")
+    s = s.replace("[", "(").replace("]", ")")
+    s = s.replace("{", "(").replace("}", ")")
+    return s
+
+
+_EXPR_CHARS_RE = re.compile(r"[0-9+\-*/().\s]+")
+
+
+def _longest_arith_span(s: str) -> str:
+    """Return the longest substring containing only arithmetic characters."""
+    best = ""
+    for match in _EXPR_CHARS_RE.finditer(s):
+        candidate = match.group(0).strip()
+        if len(candidate) > len(best):
+            best = candidate
+    return best
+
+
 def _extract_expression(text: str) -> str:
     """
     Tries to pull an arithmetic expression out of a model response.
 
-    Heuristics:
-    - Prefer content after 'Final:' if present.
-    - Otherwise use the last non-empty line.
+    Heuristics (in order):
+    - Prefer content after the last 'Final:' marker.
+    - Otherwise, scan lines from bottom and return the longest arithmetic span
+      found on any non-empty line.
+    - Fallback: the last non-empty line as-is.
     """
     s = (text or "").strip()
     if not s:
         return ""
 
+    s = _delatex(s)
+
     lowered = s.lower()
     if "final" in lowered:
-        # Split on the last occurrence of "final" to avoid earlier mentions.
         idx = lowered.rfind("final")
         tail = s[idx:]
-        # Accept forms like "Final: (1+2)*3"
         if ":" in tail:
-            after_colon = tail.split(":", 1)[1].strip()
+            after_colon = tail.split(":", 1)[1]
+            # Take only the first line after 'Final:' to avoid trailing prose.
+            after_colon = after_colon.splitlines()[0].strip() if after_colon else ""
+            candidate = _longest_arith_span(after_colon)
+            if candidate:
+                return candidate
             if after_colon:
                 return after_colon
 
     lines = [ln.strip() for ln in s.splitlines() if ln.strip()]
+    for line in reversed(lines):
+        candidate = _longest_arith_span(line)
+        if candidate and any(c.isdigit() for c in candidate):
+            return candidate
+
     return lines[-1] if lines else s
 
 

@@ -44,9 +44,9 @@ def main():
     if not api_key:
         raise ValueError("Please set OPENAI_API_KEY in .env file")
 
-    # Load 10 problems from dataset for testing
+    # Load 50 problems from dataset
     data_path = "../data/test_puzzles_50.csv"
-    problems = load_problems(data_path, num_problems=10)
+    problems = load_problems(data_path, num_problems=50)
 
     print(f"Loaded {len(problems)} problems from dataset")
     print()

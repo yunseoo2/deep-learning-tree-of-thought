@@ -9,44 +9,7 @@ from typing import List, Dict, Tuple
 import os
 from dotenv import load_dotenv
 
-
-def verify_expression(numbers: List[int], expression: str) -> bool:
-    """
-    Verify if the expression is valid and equals 24.
-
-    Args:
-        numbers: List of 4 integers to use
-        expression: Mathematical expression to verify
-
-    Returns:
-        True if expression uses each number exactly once and equals 24
-    """
-    try:
-        # Check if expression evaluates to 24
-        result = eval(expression)
-        if abs(result - 24) > 0.001:  # Allow small floating point error
-            return False
-
-        # Check if each number is used exactly once
-        expr_clean = expression.replace('(', '').replace(')', '').replace(' ', '')
-        used_numbers = []
-        current_num = ""
-
-        for char in expr_clean:
-            if char.isdigit():
-                current_num += char
-            else:
-                if current_num:
-                    used_numbers.append(int(current_num))
-                    current_num = ""
-        if current_num:
-            used_numbers.append(int(current_num))
-
-        # Sort both lists and compare
-        return sorted(used_numbers) == sorted(numbers)
-
-    except:
-        return False
+from validation import validate_24_expression
 
 
 def cot_prompt(numbers: List[int], api_key: str) -> Tuple[str, bool]:
@@ -62,14 +25,17 @@ def cot_prompt(numbers: List[int], api_key: str) -> Tuple[str, bool]:
     """
     client = openai.OpenAI(api_key=api_key)
 
-    prompt = f"""Use each of the numbers {numbers[0]}, {numbers[1]}, {numbers[2]}, {numbers[3]} exactly once with operations +, -, *, / to get 24.
-
-Think step by step:
-1. Consider different ways to combine the numbers
-2. Evaluate intermediate results
-3. Work towards getting 24
-
-Give your final answer as a single mathematical expression at the end."""
+    prompt = (
+        f"Use each of the numbers {numbers[0]}, {numbers[1]}, {numbers[2]}, {numbers[3]} "
+        f"exactly once with operations +, -, *, / (and parentheses) to get 24.\n\n"
+        f"Think step by step:\n"
+        f"1. Consider different ways to combine the numbers\n"
+        f"2. Evaluate intermediate results\n"
+        f"3. Work towards getting 24\n\n"
+        f"End your response with a line of exactly this form:\n"
+        f"Final: <expression>\n"
+        f"The expression must use only integers, + - * /, and parentheses. No LaTeX, no words."
+    )
 
     try:
         response = client.chat.completions.create(
@@ -82,26 +48,8 @@ Give your final answer as a single mathematical expression at the end."""
         )
 
         answer = response.choices[0].message.content.strip()
-
-        # Try to extract expression from the answer
-        # Look for the final expression (often at the end or after "Final answer:")
-        lines = answer.split('\n')
-
-        # Try lines in reverse order (final answer usually at end)
-        for line in reversed(lines):
-            line = line.strip()
-            # Skip empty lines or section headers
-            if not line or line.endswith(':') or line.startswith('Step') or line.startswith('#'):
-                continue
-            # Try to verify this line as an expression
-            if verify_expression(numbers, line):
-                return answer, True
-
-        # Also try the whole answer
-        if verify_expression(numbers, answer):
-            return answer, True
-
-        return answer, False
+        result = validate_24_expression(numbers, answer)
+        return answer, result.ok
 
     except Exception as e:
         return f"Error: {str(e)}", False

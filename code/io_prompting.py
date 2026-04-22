@@ -9,44 +9,7 @@ from typing import List, Dict, Tuple
 import os
 from dotenv import load_dotenv
 
-
-def verify_expression(numbers: List[int], expression: str) -> bool:
-    """
-    Verify if the expression is valid and equals 24.
-
-    Args:
-        numbers: List of 4 integers to use
-        expression: Mathematical expression to verify
-
-    Returns:
-        True if expression uses each number exactly once and equals 24
-    """
-    try:
-        # Check if expression evaluates to 24
-        result = eval(expression)
-        if abs(result - 24) > 0.001:  # Allow small floating point error
-            return False
-
-        # Check if each number is used exactly once
-        expr_clean = expression.replace('(', '').replace(')', '').replace(' ', '')
-        used_numbers = []
-        current_num = ""
-
-        for char in expr_clean:
-            if char.isdigit():
-                current_num += char
-            else:
-                if current_num:
-                    used_numbers.append(int(current_num))
-                    current_num = ""
-        if current_num:
-            used_numbers.append(int(current_num))
-
-        # Sort both lists and compare
-        return sorted(used_numbers) == sorted(numbers)
-
-    except:
-        return False
+from validation import validate_24_expression
 
 
 def io_prompt(numbers: List[int], api_key: str) -> Tuple[str, bool]:
@@ -62,7 +25,13 @@ def io_prompt(numbers: List[int], api_key: str) -> Tuple[str, bool]:
     """
     client = openai.OpenAI(api_key=api_key)
 
-    prompt = f"""Use each of the numbers {numbers[0]}, {numbers[1]}, {numbers[2]}, {numbers[3]} exactly once with operations +, -, *, / to get 24. Give your answer as a single mathematical expression."""
+    prompt = (
+        f"Use each of the numbers {numbers[0]}, {numbers[1]}, {numbers[2]}, {numbers[3]} "
+        f"exactly once with operations +, -, *, / (and parentheses) to get 24.\n"
+        f"End your response with a line of exactly this form:\n"
+        f"Final: <expression>\n"
+        f"The expression must use only integers, + - * /, and parentheses. No LaTeX, no words."
+    )
 
     try:
         response = client.chat.completions.create(
@@ -75,24 +44,8 @@ def io_prompt(numbers: List[int], api_key: str) -> Tuple[str, bool]:
         )
 
         answer = response.choices[0].message.content.strip()
-
-        # Try to extract expression from the answer
-        # The model might give explanation, so try to find the expression
-        lines = answer.split('\n')
-        for line in lines:
-            line = line.strip()
-            # Skip empty lines or lines that are clearly explanatory
-            if not line or line.endswith(':') or line.startswith('Answer'):
-                continue
-            # Try to verify this line as an expression
-            if verify_expression(numbers, line):
-                return answer, True
-
-        # If no line worked individually, try the whole answer
-        if verify_expression(numbers, answer):
-            return answer, True
-
-        return answer, False
+        result = validate_24_expression(numbers, answer)
+        return answer, result.ok
 
     except Exception as e:
         return f"Error: {str(e)}", False
