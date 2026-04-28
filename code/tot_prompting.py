@@ -72,17 +72,65 @@ def value_state(
     n_samples: int = 3,
 ) -> float:
     """
-    STUB (Lauren): evaluator.
-
     Prompt the LLM `n_samples` times to judge whether `state.remaining` can
     still reach 24 (sure / likely / impossible). Map each judgement to a number
     (paper uses sure=20, likely=1, impossible=0.001) and return the sum.
 
     Expected return: float score (higher is better).
     """
-    raise NotImplementedError(
-        "value_state is owned by Lauren (evaluator prompt, sure/maybe/impossible)."
+    if n_samples <= 0:
+        return 0.0
+
+    # Terminal checks (avoid an API call when we already know the answer).
+    if len(state.remaining) == 1:
+        return 20.0 * n_samples if state.remaining[0] == 24 else 0.001 * n_samples
+
+    # Paper mapping (ToT / Game of 24): sure=20, likely=1, impossible=0.001
+    weights = {"sure": 20.0, "likely": 1.0, "impossible": 0.001}
+
+    def _parse_judgement(text: str) -> str | None:
+        t = (text or "").strip().lower()
+        # Prefer explicit labels first.
+        for key in ("sure", "likely", "impossible"):
+            if key in t:
+                return key
+        # Handle common synonyms / formatting variants.
+        if "possible" in t:
+            return "likely"
+        if "maybe" in t or "uncertain" in t:
+            return "likely"
+        if "can't" in t or "cannot" in t or "not possible" in t:
+            return "impossible"
+        return None
+
+    system = (
+        "You are an evaluator for the Game of 24.\n"
+        "Given a multiset of remaining integers, judge whether it can still reach 24 "
+        "using only +, -, *, / and parentheses, using each number exactly once.\n"
+        "Respond with exactly one token: sure, likely, or impossible."
     )
+    user = f"Remaining numbers: {list(state.remaining)}\nJudgement:"
+
+    score = 0.0
+    for _ in range(n_samples):
+        try:
+            response = client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": user},
+                ],
+                temperature=0.7,
+                max_tokens=5,
+            )
+            content = (response.choices[0].message.content or "").strip()
+            label = _parse_judgement(content)
+            score += weights.get(label or "", weights["impossible"])
+        except Exception:
+            # If evaluation fails (rate limit / transient error), be conservative.
+            score += weights["impossible"]
+
+    return float(score)
 
 
 # ---------------------------------------------------------------------------
