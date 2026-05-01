@@ -1,0 +1,611 @@
+{
+  "method": "ToT-BFS",
+  "beam_size": 5,
+  "steps": 3,
+  "total": 3,
+  "successes": 3,
+  "failures": 0,
+  "problems": [
+    {
+      "numbers": [
+        3,
+        3,
+        12,
+        12
+      ],
+      "expression": "((3 - 3) + (12 + 12))",
+      "success": true,
+      "trace": {
+        "beam_size": 5,
+        "steps": 3,
+        "levels": [
+          {
+            "step": 1,
+            "proposals": 9,
+            "survivors": [
+              {
+                "remaining": [
+                  12,
+                  12,
+                  0
+                ],
+                "expression": "12|12|(3 - 3)",
+                "steps": [
+                  "3 - 3 = 0 (left: 12 12 0)"
+                ]
+              },
+              {
+                "remaining": [
+                  3,
+                  12,
+                  4
+                ],
+                "expression": "3|12|(12 / 3)",
+                "steps": [
+                  "12 / 3 = 4 (left: 3 12 4)"
+                ]
+              },
+              {
+                "remaining": [
+                  3,
+                  12,
+                  36
+                ],
+                "expression": "3|12|(3 * 12)",
+                "steps": [
+                  "3 * 12 = 36 (left: 3 12 36)"
+                ]
+              },
+              {
+                "remaining": [
+                  3,
+                  3,
+                  24
+                ],
+                "expression": "3|3|(12 + 12)",
+                "steps": [
+                  "12 + 12 = 24 (left: 3 3 24)"
+                ]
+              },
+              {
+                "remaining": [
+                  12,
+                  12,
+                  6
+                ],
+                "expression": "12|12|(3 + 3)",
+                "steps": [
+                  "3 + 3 = 6 (left: 12 12 6)"
+                ]
+              }
+            ]
+          },
+          {
+            "step": 2,
+            "proposals": 66,
+            "survivors": [
+              {
+                "remaining": [
+                  0,
+                  24
+                ],
+                "expression": "(3 - 3)|(12 + 12)",
+                "steps": [
+                  "3 - 3 = 0 (left: 12 12 0)",
+                  "12 + 12 = 24 (left: 0 24)"
+                ]
+              },
+              {
+                "remaining": [
+                  12,
+                  12
+                ],
+                "expression": "12|(12 + (3 - 3))",
+                "steps": [
+                  "3 - 3 = 0 (left: 12 12 0)",
+                  "12 + 0 = 12 (left: 12 12)"
+                ]
+              },
+              {
+                "remaining": [
+                  12,
+                  12
+                ],
+                "expression": "12|(12 - (3 - 3))",
+                "steps": [
+                  "3 - 3 = 0 (left: 12 12 0)",
+                  "12 - 0 = 12 (left: 12 12)"
+                ]
+              },
+              {
+                "remaining": [
+                  12,
+                  12
+                ],
+                "expression": "12|((3 - 3) + 12)",
+                "steps": [
+                  "3 - 3 = 0 (left: 12 12 0)",
+                  "0 + 12 = 12 (left: 12 12)"
+                ]
+              },
+              {
+                "remaining": [
+                  12,
+                  -12
+                ],
+                "expression": "12|((3 - 3) - 12)",
+                "steps": [
+                  "3 - 3 = 0 (left: 12 12 0)",
+                  "0 - 12 = -12 (left: 12 -12)"
+                ]
+              }
+            ]
+          },
+          {
+            "step": 3,
+            "proposals": 23,
+            "survivors": [
+              {
+                "remaining": [
+                  24
+                ],
+                "expression": "((3 - 3) + (12 + 12))",
+                "steps": [
+                  "3 - 3 = 0 (left: 12 12 0)",
+                  "12 + 12 = 24 (left: 0 24)",
+                  "0 + 24 = 24 (left: 24)"
+                ]
+              },
+              {
+                "remaining": [
+                  24
+                ],
+                "expression": "((12 + 12) + (3 - 3))",
+                "steps": [
+                  "3 - 3 = 0 (left: 12 12 0)",
+                  "12 + 12 = 24 (left: 0 24)",
+                  "24 + 0 = 24 (left: 24)"
+                ]
+              },
+              {
+                "remaining": [
+                  24
+                ],
+                "expression": "((12 + 12) - (3 - 3))",
+                "steps": [
+                  "3 - 3 = 0 (left: 12 12 0)",
+                  "12 + 12 = 24 (left: 0 24)",
+                  "24 - 0 = 24 (left: 24)"
+                ]
+              },
+              {
+                "remaining": [
+                  24
+                ],
+                "expression": "(12 + (12 + (3 - 3)))",
+                "steps": [
+                  "3 - 3 = 0 (left: 12 12 0)",
+                  "12 + 0 = 12 (left: 12 12)",
+                  "12 + 12 = 24 (left: 24)"
+                ]
+              },
+              {
+                "remaining": [
+                  24
+                ],
+                "expression": "(12 + (12 - (3 - 3)))",
+                "steps": [
+                  "3 - 3 = 0 (left: 12 12 0)",
+                  "12 - 0 = 12 (left: 12 12)",
+                  "12 + 12 = 24 (left: 24)"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "error": null
+    },
+    {
+      "numbers": [
+        2,
+        3,
+        5,
+        10
+      ],
+      "expression": "(2 * ((5 + 10) - 3))",
+      "success": true,
+      "trace": {
+        "beam_size": 5,
+        "steps": 3,
+        "levels": [
+          {
+            "step": 1,
+            "proposals": 18,
+            "survivors": [
+              {
+                "remaining": [
+                  2,
+                  3,
+                  15
+                ],
+                "expression": "2|3|(5 + 10)",
+                "steps": [
+                  "5 + 10 = 15 (left: 2 3 15)"
+                ]
+              },
+              {
+                "remaining": [
+                  3,
+                  5,
+                  12
+                ],
+                "expression": "3|5|(10 + 2)",
+                "steps": [
+                  "10 + 2 = 12 (left: 3 5 12)"
+                ]
+              },
+              {
+                "remaining": [
+                  3,
+                  5,
+                  8
+                ],
+                "expression": "3|5|(10 - 2)",
+                "steps": [
+                  "10 - 2 = 8 (left: 3 5 8)"
+                ]
+              },
+              {
+                "remaining": [
+                  5,
+                  10,
+                  6
+                ],
+                "expression": "5|10|(2 * 3)",
+                "steps": [
+                  "2 * 3 = 6 (left: 5 10 6)"
+                ]
+              },
+              {
+                "remaining": [
+                  2,
+                  10,
+                  2
+                ],
+                "expression": "2|10|(5 - 3)",
+                "steps": [
+                  "5 - 3 = 2 (left: 2 10 2)"
+                ]
+              }
+            ]
+          },
+          {
+            "step": 2,
+            "proposals": 90,
+            "survivors": [
+              {
+                "remaining": [
+                  2,
+                  12
+                ],
+                "expression": "2|((5 + 10) - 3)",
+                "steps": [
+                  "5 + 10 = 15 (left: 2 3 15)",
+                  "15 - 3 = 12 (left: 2 12)"
+                ]
+              },
+              {
+                "remaining": [
+                  12,
+                  2
+                ],
+                "expression": "(10 + 2)|(5 - 3)",
+                "steps": [
+                  "10 + 2 = 12 (left: 3 5 12)",
+                  "5 - 3 = 2 (left: 12 2)"
+                ]
+              },
+              {
+                "remaining": [
+                  2,
+                  12
+                ],
+                "expression": "(5 - 3)|(2 + 10)",
+                "steps": [
+                  "5 - 3 = 2 (left: 2 10 2)",
+                  "2 + 10 = 12 (left: 2 12)"
+                ]
+              },
+              {
+                "remaining": [
+                  2,
+                  12
+                ],
+                "expression": "(5 - 3)|(10 + 2)",
+                "steps": [
+                  "5 - 3 = 2 (left: 2 10 2)",
+                  "10 + 2 = 12 (left: 2 12)"
+                ]
+              },
+              {
+                "remaining": [
+                  12,
+                  8
+                ],
+                "expression": "(10 + 2)|(3 + 5)",
+                "steps": [
+                  "10 + 2 = 12 (left: 3 5 12)",
+                  "3 + 5 = 8 (left: 12 8)"
+                ]
+              }
+            ]
+          },
+          {
+            "step": 3,
+            "proposals": 23,
+            "survivors": [
+              {
+                "remaining": [
+                  24
+                ],
+                "expression": "(2 * ((5 + 10) - 3))",
+                "steps": [
+                  "5 + 10 = 15 (left: 2 3 15)",
+                  "15 - 3 = 12 (left: 2 12)",
+                  "2 * 12 = 24 (left: 24)"
+                ]
+              },
+              {
+                "remaining": [
+                  24
+                ],
+                "expression": "((10 + 2) * (5 - 3))",
+                "steps": [
+                  "10 + 2 = 12 (left: 3 5 12)",
+                  "5 - 3 = 2 (left: 12 2)",
+                  "12 * 2 = 24 (left: 24)"
+                ]
+              },
+              {
+                "remaining": [
+                  24
+                ],
+                "expression": "((5 - 3) * (2 + 10))",
+                "steps": [
+                  "5 - 3 = 2 (left: 2 10 2)",
+                  "2 + 10 = 12 (left: 2 12)",
+                  "2 * 12 = 24 (left: 24)"
+                ]
+              },
+              {
+                "remaining": [
+                  24
+                ],
+                "expression": "((5 - 3) * (10 + 2))",
+                "steps": [
+                  "5 - 3 = 2 (left: 2 10 2)",
+                  "10 + 2 = 12 (left: 2 12)",
+                  "2 * 12 = 24 (left: 24)"
+                ]
+              },
+              {
+                "remaining": [
+                  14
+                ],
+                "expression": "(2 + ((5 + 10) - 3))",
+                "steps": [
+                  "5 + 10 = 15 (left: 2 3 15)",
+                  "15 - 3 = 12 (left: 2 12)",
+                  "2 + 12 = 14 (left: 14)"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "error": null
+    },
+    {
+      "numbers": [
+        4,
+        5,
+        6,
+        12
+      ],
+      "expression": "((12 * (4 + 6)) / 5)",
+      "success": true,
+      "trace": {
+        "beam_size": 5,
+        "steps": 3,
+        "levels": [
+          {
+            "step": 1,
+            "proposals": 30,
+            "survivors": [
+              {
+                "remaining": [
+                  5,
+                  12,
+                  10
+                ],
+                "expression": "5|12|(4 + 6)",
+                "steps": [
+                  "4 + 6 = 10 (left: 5 12 10)"
+                ]
+              },
+              {
+                "remaining": [
+                  5,
+                  6,
+                  48
+                ],
+                "expression": "5|6|(4 * 12)",
+                "steps": [
+                  "4 * 12 = 48 (left: 5 6 48)"
+                ]
+              },
+              {
+                "remaining": [
+                  4,
+                  12,
+                  11
+                ],
+                "expression": "4|12|(5 + 6)",
+                "steps": [
+                  "5 + 6 = 11 (left: 4 12 11)"
+                ]
+              },
+              {
+                "remaining": [
+                  6,
+                  12,
+                  9
+                ],
+                "expression": "6|12|(4 + 5)",
+                "steps": [
+                  "4 + 5 = 9 (left: 6 12 9)"
+                ]
+              },
+              {
+                "remaining": [
+                  6,
+                  12,
+                  1
+                ],
+                "expression": "6|12|(5 - 4)",
+                "steps": [
+                  "5 - 4 = 1 (left: 6 12 1)"
+                ]
+              }
+            ]
+          },
+          {
+            "step": 2,
+            "proposals": 92,
+            "survivors": [
+              {
+                "remaining": [
+                  5,
+                  120
+                ],
+                "expression": "5|(12 * (4 + 6))",
+                "steps": [
+                  "4 + 6 = 10 (left: 5 12 10)",
+                  "12 * 10 = 120 (left: 5 120)"
+                ]
+              },
+              {
+                "remaining": [
+                  5,
+                  120
+                ],
+                "expression": "5|((4 + 6) * 12)",
+                "steps": [
+                  "4 + 6 = 10 (left: 5 12 10)",
+                  "10 * 12 = 120 (left: 5 120)"
+                ]
+              },
+              {
+                "remaining": [
+                  10,
+                  2.4
+                ],
+                "expression": "(4 + 6)|(12 / 5)",
+                "steps": [
+                  "4 + 6 = 10 (left: 5 12 10)",
+                  "12 / 5 = 12/5 (left: 10 12/5)"
+                ]
+              },
+              {
+                "remaining": [
+                  12,
+                  2
+                ],
+                "expression": "12|((4 + 6) / 5)",
+                "steps": [
+                  "4 + 6 = 10 (left: 5 12 10)",
+                  "10 / 5 = 2 (left: 12 2)"
+                ]
+              },
+              {
+                "remaining": [
+                  48,
+                  1
+                ],
+                "expression": "(4 * 12)|(6 - 5)",
+                "steps": [
+                  "4 * 12 = 48 (left: 5 6 48)",
+                  "6 - 5 = 1 (left: 48 1)"
+                ]
+              }
+            ]
+          },
+          {
+            "step": 3,
+            "proposals": 23,
+            "survivors": [
+              {
+                "remaining": [
+                  24
+                ],
+                "expression": "((12 * (4 + 6)) / 5)",
+                "steps": [
+                  "4 + 6 = 10 (left: 5 12 10)",
+                  "12 * 10 = 120 (left: 5 120)",
+                  "120 / 5 = 24 (left: 24)"
+                ]
+              },
+              {
+                "remaining": [
+                  24
+                ],
+                "expression": "(((4 + 6) * 12) / 5)",
+                "steps": [
+                  "4 + 6 = 10 (left: 5 12 10)",
+                  "10 * 12 = 120 (left: 5 120)",
+                  "120 / 5 = 24 (left: 24)"
+                ]
+              },
+              {
+                "remaining": [
+                  24
+                ],
+                "expression": "(12 * ((4 + 6) / 5))",
+                "steps": [
+                  "4 + 6 = 10 (left: 5 12 10)",
+                  "10 / 5 = 2 (left: 12 2)",
+                  "12 * 2 = 24 (left: 24)"
+                ]
+              },
+              {
+                "remaining": [
+                  24
+                ],
+                "expression": "(((4 + 6) / 5) * 12)",
+                "steps": [
+                  "4 + 6 = 10 (left: 5 12 10)",
+                  "10 / 5 = 2 (left: 12 2)",
+                  "2 * 12 = 24 (left: 24)"
+                ]
+              },
+              {
+                "remaining": [
+                  125
+                ],
+                "expression": "(5 + (12 * (4 + 6)))",
+                "steps": [
+                  "4 + 6 = 10 (left: 5 12 10)",
+                  "12 * 10 = 120 (left: 5 120)",
+                  "5 + 120 = 125 (left: 125)"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "error": null
+    }
+  ],
+  "success_rate": 1.0
+}

@@ -11,7 +11,7 @@
         12,
         12
       ],
-      "response": "((12 / (3 - 3/12)) * 3) = 24\n\nFinal: ((12 / (3 - 3/12)) * 3)",
+      "response": "Answer: (12 / 3) * (12 - 3) = 24",
       "success": false
     },
     {
@@ -21,7 +21,7 @@
         5,
         10
       ],
-      "response": "One way to achieve 24 using the numbers 2, 3, 5, and 10 exactly once with the operations is:\n\n(10 - 5) * 3 + 2\n\nFinal: (10 - 5) * 3 + 2",
+      "response": "(10 - 5) * (3 + 2) = 24",
       "success": false
     },
     {
@@ -31,7 +31,7 @@
         6,
         12
       ],
-      "response": "To solve this problem, we need to find a way to combine the numbers 4, 5, 6, and 12 using the operations +, -, *, / to get a result of 24. Let's try different combinations:\n\nOne possible solution is:\n(5 - 4) * (6 + 12)\n\nHere's the breakdown:\n1. Calculate the expression inside the first parenthesis: (5 - 4) = 1\n2. Calculate the expression inside the second parenthesis: (6 + 12) = 18\n3. Multiply the results of the two parenthesis: 1 * 18 = 18\n\nThis attempt doesn't seem to achieve 24, so let's try another approach:\n\nAnother possible solution is:\n(6 / (12 / 4)) * 5\n\nHere's the breakdown:\n1. Calculate the division inside the innermost parenthesis: (12 / 4) = 3\n2. Perform the division: 6",
+      "response": "To obtain 24 using the numbers 4, 5, 6, and 12, one possible solution is:\n\n\\( (12 - 6) * (5 - 4) = 24 \\)",
       "success": false
     },
     {
@@ -41,7 +41,7 @@
         4,
         4
       ],
-      "response": "To achieve the number 24 using the numbers 1, 4, 4, 4 with the allowed operations, you can use the following expression:\n\n(4 * (4 + 4)) - 1\n\nFinal: (4 * (4 + 4)) - 1",
+      "response": "Answer: (4 + 4 + 4) * 1 = 24",
       "success": false
     },
     {
@@ -51,7 +51,7 @@
         10,
         12
       ],
-      "response": "To solve this, we need to use the numbers 2, 5, 10, and 12 exactly once with the operations +, -, *, and / to achieve the result of 24. Through trial and adjustment, we can find the correct expression.\n\nOne possible solution is:\n(12 / (5 - 2)) * 10 = 24\n\nFinal: (12 / (5 - 2)) * 10",
+      "response": "Answer: (12 - 10) * (5 + 2) = 24",
       "success": false
     },
     {
@@ -61,7 +61,7 @@
         5,
         6
       ],
-      "response": "To achieve the number 24 using the numbers 3, 5, 5, and 6 with the operations +, -, *, and /, we can proceed as follows:\n\n1. Start by grouping and operating on the numbers: (5 - 3) gives us 2.\n2. Multiply 2 by 6 to get 12: 2 * 6 = 12.\n3. Finally, multiply 12 by the remaining 5 to get 60: 12 * 5 = 60.\n4. Divide 60 by the remaining 5 to check if it equals 24: 60 / 5 = 12.\n\nNotice that this doesn't yield 24, so let's try another approach:\n\n1. Use the numbers in this order with operations: (5 * (6 - 3)) + 5.\n2. Calculate inside the parentheses: 6 - 3 = 3.\n3. Multiply the results: 5 * 3 =",
+      "response": "Answer: (5 - 3) * 6 + 5 = 24",
       "success": false
     },
     {
@@ -71,7 +71,7 @@
         10,
         12
       ],
-      "response": "To form the number 24 using the numbers 3, 9, 10, and 12 exactly once along with the operations +, -, *, /, and parentheses, we can follow these steps:\n\n1. Start by considering how these numbers might be combined through multiplication or division to make the calculations simpler.\n2. Recognize that multiplying larger numbers can quickly reach or exceed 24, so consider combinations that involve division to adjust the total.\n\nHere's a logical breakdown:\n\n- Notice that 12 divided by 3 equals 4.\n- Multiply that result (4) by 9 to get 36.\n- Subtract 10 to reach 26.\n- Adjust by subtracting another 2 (through division of suitable numbers).\n\nPutting it all together, we can construct the following expression:\n\nFinal: (12 / 3) * 9 - 10 + 2",
+      "response": "Answer: (12 - 9) * (10 - 3) = 24",
       "success": false
     },
     {
@@ -81,7 +81,7 @@
         8,
         12
       ],
-      "response": "To achieve the target number 24 using the numbers 4, 8, 8, and 12, we can use the following steps:\n\n1. Divide 12 by 4 to get 3.\n2. Divide 8 by 8 to get 1.\n3. Multiply the results of steps 1 and 2 to get 3 * 1 = 3.\n4. Multiply the result by 8 to get 24.\n\nHere is the expression:\n\nFinal: (12 / 4) * (8 / 8) * 8",
+      "response": "Answer: (12 - 8) * (8 - 4) = 24",
       "success": false
     },
     {
@@ -91,7 +91,7 @@
         5,
         6
       ],
-      "response": "To solve this, we need to strategically use the operations and parentheses. Here's one way to do it:\n\n1. Start by grouping numbers and operations to form an expression that simplifies to 24.\n2. Observe the numbers and how they can be combined: 6 and 4 can form 24 when multiplied.\n3. Use the remaining numbers to form a 6 using addition and division: (5 + 1).\n\nLet's check the steps:\n\n- Combine 6 and 4: \\( 6 \\times 4 = 24 \\)\n- Form 1 using the remaining numbers 2 and 5: \\( 5 - 2 = 3 \\), then \\( 3 / 3 = 1 \\)\n\nNow put it all together:\n\nFinal: (5 - 2) * 6 + 4",
+      "response": "Answer: (6 - 2) * (5 - 4) * 4 = 24",
       "success": false
     },
     {
@@ -101,7 +101,7 @@
         8,
         10
       ],
-      "response": "To solve this problem, we'll try to combine the numbers 2, 3, 8, and 10 using the operations +, -, *, and / to achieve the result of 24. Here's one possible solution:\n\n1. Start by multiplying 8 and 3:  \n   \\(8 * 3 = 24\\)\n\n2. Since we need 24, we can focus on making sure the remaining operations with 2 and 10 don't affect the product:\n\n   We can use the numbers 2 and 10 in a way that they cancel out each other when used with multiplication and division.\n\n3. Finally, use the expression:\n   \\((10 - 2) + (8 * 3) - 24 = 0\\), which simplifies back to \\(24\\).\n\nTherefore, using the given numbers and operations, one possible expression is:\nFinal: \\( (8 * 3) / (10 - 2) = 24 \\)",
+      "response": "Answer: (10 - 8 + 3) * 2 = 24",
       "success": false
     },
     {
@@ -111,7 +111,7 @@
         13,
         13
       ],
-      "response": "To solve this problem, we need to use the numbers 7, 9, 13, and 13 with the operations +, -, *, / and parentheses to achieve the result of 24. \n\nLet's try to approach this step by step:\n\n1. We can start by trying to divide one of the numbers or a combination of numbers to simplify the expression.\n2. Then we'll try to use the other operations to reach 24.\n3. We should keep in mind the order of operations and use parentheses to manipulate this.\n\nAfter testing various combinations, the following expression works:\n\nFinal: (13 - 9) * (13 - 7)",
+      "response": "Answer: (13 - 9) * (13 - 7) = 24",
       "success": true
     },
     {
@@ -121,7 +121,7 @@
         9,
         9
       ],
-      "response": "To solve this problem, we can try different combinations of operations and parentheses to see which one results in 24. Here's one possible solution:\n\n1. Start by multiplying 6 with 3 to get 18.\n2. Then, divide 9 by 9 to get 1.\n3. Add the result of step 2 to the result of step 1.\n\nHere's the expression:\n\nFinal: (6 * 3) + (9 / 9)",
+      "response": "Answer: (9 / 3) * 6 + 9 = 24",
       "success": false
     },
     {
@@ -131,8 +131,8 @@
         5,
         10
       ],
-      "response": "To solve this, we need to combine the numbers 1, 3, 5, and 10 using basic arithmetic operations to result in 24. Let's explore how we can do that:\n\nFirst, we can look at using multiplication and addition strategically since 24 is a product of 6 and 4, which are smaller numbers. We can try to form these numbers using our given digits.\n\n1. Start with multiplication of 5 and 3 to get 15.\n2. Add 10 to 15 to get 25.\n3. Subtract 1 to get 24.\n\nHence, the expression is:\n\nFinal: (5 * 3) + 10 - 1",
-      "success": true
+      "response": "To obtain 24 using the numbers 1, 3, 5, and 10, you can use the following expression:\n\n(10 + 5 + 3 + 1) = 19 + 5 = 24\n\nHowever, this does not directly lead to 24 without rearranging. Let's try another approach:\n\n(10 - 1) * (3 + 5) = 9 * 3 = 27\n\nThis approach also isn't correct. Let's try yet another combination:\n\n(5 * 3) + (10 - 1) = 15 + 9 = 24\n\nThis correctly results in 24 using the numbers 1, 3, 5, and 10.",
+      "success": false
     },
     {
       "numbers": [
@@ -141,7 +141,7 @@
         12,
         12
       ],
-      "response": "((12 / (12 - 10)) * 10) - 10 = 24\n\nFinal: ((12 / (12 - 10)) * 10) - 10",
+      "response": "Answer: 12 * 2 - 10 = 24",
       "success": false
     },
     {
@@ -151,7 +151,7 @@
         11,
         11
       ],
-      "response": "To solve this, we need to use all the numbers and operations to equal 24. Here's one way to achieve that:\n\n1. Start with the numbers: 3, 5, 11, 11.\n2. Use the operation division and subtraction: \n\n   (11 - 5) = 6\n\n3. Now multiply the result by 3:\n\n   6 * 3 = 18\n\n4. Add the remaining 11:\n\n   18 + 11 = 29\n\n5. Subtract 5:\n\n   29 - 5 = 24\n\nFinal: ((11 - 5) * 3) + (11 - 5)",
+      "response": "(11 - 5) * (11 - 3) = 24",
       "success": false
     },
     {
@@ -161,8 +161,8 @@
         3,
         6
       ],
-      "response": "((6 / (3 - 3/2)) * 2)  \nFinal: ((6 / (3 - 3/2)) * 2)",
-      "success": false
+      "response": "Answer: (3 + 3) * (6 - 2) = 24",
+      "success": true
     },
     {
       "numbers": [
@@ -171,7 +171,7 @@
         11,
         11
       ],
-      "response": "To solve this, we can try various combinations of these numbers with operations to achieve 24:\n\n1. Start with the numbers 1, 5, 11, and 11. \n2. Try different operations and groupings:\n\n(11 - 5) = 6  \n6 * 1 = 6  \n6 * 4 = 24  \n\nNow let's rearrange to use all numbers:\n\n(11 - 5) * (11 - (1)) = 24\n\nFinal: (11 - 5) * (11 - 1)",
+      "response": "Answer: (11 - 5) * (11 - 1) = 24",
       "success": false
     },
     {
@@ -181,7 +181,7 @@
         4,
         8
       ],
-      "response": "One way to achieve 24 using the numbers 4, 4, 4, and 8 is by constructing the expression as follows:\n\n(8 / (4 - 4/4)) * 4\n\nHere's how it works:\n1. Calculate 4/4 = 1.\n2. Subtract the result from the other 4: 4 - 1 = 3.\n3. Divide 8 by the result: 8 / 3.\n4. Multiply the result by the remaining 4: (8/3) * 4 = 32/3.\n5. Notice that this doesn't give an integer result, so let's adjust.\n\nLet's try another approach:\n- Use 4 * 4 = 16.\n- Add 8 to get 24.\n\nFinal: 4 * 4 + 8 = 24",
+      "response": "Answer: (4 + 4 + 4) * 2 = 24",
       "success": false
     },
     {
@@ -191,7 +191,7 @@
         10,
         11
       ],
-      "response": "To achieve the number 24 using the numbers 1, 3, 10, and 11, we can arrange them and apply the operations as follows:\n\n\\[ (11 - 1) \\times (3 - 10 / 10) \\]\n\nBreaking it down:\n\n1. Calculate \\( 10 / 10 = 1 \\).\n2. Then, \\( 3 - 1 = 2 \\).\n3. Calculate \\( 11 - 1 = 10 \\).\n4. Finally, multiply \\( 10 \\times 2 = 20 \\).\n\nI apologize; it seems there was an error in my initial calculation. Let's correct this:\n\n\\[ (11 - 1) \\times 3 - 10 \\]\n\nBreaking it down:\n\n1. Calculate \\( 11 - 1 = 10 \\).\n2. Then, \\( 10 \\times 3 = 30 \\).\n3. Finally, \\( 30 - 10 = 20 \\).",
+      "response": "(11 - 10) * (3 + 1) * 3 = 24",
       "success": false
     },
     {
@@ -201,7 +201,7 @@
         7,
         12
       ],
-      "response": "To solve this, we need to find a combination of operations and parentheses that will result in 24 using the numbers 1, 6, 7, and 12 exactly once. Here's one way to do it:\n\n1. Start with 12 and 6: (12 / 6) = 2\n2. Add 1: 2 + 1 = 3\n3. Multiply by 7: 3 * 7 = 21\n4. Add the remaining 3: 21 + 3 = 24\n\nHowever, there seems to be a miscalculation. Let's try another approach:\n\n1. Start with 6 and 7: 6 * 7 = 42\n2. Subtract 12: 42 - 12 = 30\n3. Divide by 1: 30 / 1 = 30 (which doesn't work, but let's adjust the approach)\n\nLet's adjust the method completely:\n\n1. Divide",
+      "response": "Answer: (12 - 6) * (7 - 1) = 24",
       "success": false
     },
     {
@@ -211,7 +211,7 @@
         9,
         12
       ],
-      "response": "To form the number 24 using the numbers 1, 6, 9, and 12 exactly once, we can use the following expression:\n\n\\( (12 - 9) \\times (6 - 1) \\)\n\nCalculating step-by-step:\n\n1. \\( 12 - 9 = 3 \\)\n2. \\( 6 - 1 = 5 \\)\n3. \\( 3 \\times 5 = 15 \\)\n\nOops, that did not result in 24. Let me correct that:\n\nUsing a different approach, consider:\n\n\\( (9 - 6) \\times (12 - 1) \\)\n\nCalculating step-by-step:\n\n1. \\( 9 - 6 = 3 \\)\n2. \\( 12 - 1 = 11 \\)\n3. \\( 3 \\times 11 = 33 \\)\n\nOops again, let's try another:\n\nUsing another approach:\n\n\\( (6 - 1) \\times",
+      "response": "Answer: (12 - 9) * (6 + 1) = 24",
       "success": false
     },
     {
@@ -221,7 +221,7 @@
         8,
         13
       ],
-      "response": "One possible way to use the numbers 3, 7, 8, and 13 to reach 24 is:\n\n(13 - 8) * (7 - 3) = 24\n\nFinal: (13 - 8) * (7 - 3)",
+      "response": "Answer: (13 - 7) * (8 - 3) = 24",
       "success": false
     },
     {
@@ -231,7 +231,7 @@
         12,
         12
       ],
-      "response": "To achieve 24 using the numbers 9, 9, 12, 12 with the operations +, -, *, and /, we can explore different combinations and operations:\n\nOne correct solution is:\n\\[ (12 - 9) \\times (12 - 9) = 3 \\times 3 = 9 \\]\nNow we need to make an adjustment to incorporate all numbers and operations correctly:\n\nLet's go with:\n\\[ (12 / (9 - 9/12)) \\]\n\nSimplifying this step by step:\n1. Calculate \\(9/12 = 0.75\\).\n2. Then, \\(9 - 0.75 = 8.25\\).\n3. Finally, \\(12 / 8.25 = 1.4545\\).\n\nThis doesn't work out correctly. Let's adjust:\n\nLet's try:\n\\[ (12 / (9 - (12/9))) \\]\n\nSimplifying:\n1. Calculate \\(12/9 = 1.333",
+      "response": "Answer: (12 / 12) * 9 * 9 = 24",
       "success": false
     },
     {
@@ -241,7 +241,7 @@
         11,
         13
       ],
-      "response": "To obtain the number 24 using the numbers 3, 6, 11, and 13 exactly once with the operations +, -, *, /, and parentheses, we need to carefully arrange the numbers and operations.\n\nFirst, let's try to break down the problem:\n- Consider using multiplication, as it quickly scales numbers.\n- We can use division to adjust the values and achieve the desired result.\n- Try to balance the values resulting from operations to target the number 24.\n\nAfter testing various combinations, we find:\n\n(13 - 11) * (6 + 3) = 24\n\nBreaking it down:\n- 13 - 11 = 2\n- 6 + 3 = 9\n- 2 * 9 = 18 + 6 = 24 \n\nFinal: (13 - 11) * (6 + 3)",
+      "response": "Answer: (13 - 11) * (6 + 3) = 24",
       "success": false
     },
     {
@@ -251,7 +251,7 @@
         11,
         11
       ],
-      "response": "To achieve the target number 24 using the numbers 3, 7, 11, 11 exactly once, we can follow these steps:\n\n1. Start by adding the two 11s together: \n   11 + 11 = 22\n\n2. Add 3 to the result from step 1:\n   22 + 3 = 25\n\n3. Now, take the 7 and subtract 25 from it:\n   7 - 25 = -18\n\n4. Finally, multiply the result from step 3 by -1 to get 18:\n   -18 * -1 = 18\n\nIt seems I made an error in my calculation. Let me try another approach.\n\n1. Multiply 11 and 11:\n   11 * 11 = 121\n\n2. Subtract 7 from 121:\n   121 - 7 = 114\n\n3. Divide 114 by 3:\n   114 / 3",
+      "response": "Answer: (11 - 7) * (11 - 3) = 24",
       "success": false
     },
     {
@@ -261,7 +261,7 @@
         11,
         13
       ],
-      "response": "((13 - 11) * 8) + 5 = 24\n\nFinal: ((13 - 11) * 8) + 5",
+      "response": "Answer: (13 - 11) * (8 + 5) = 24",
       "success": false
     },
     {
@@ -271,7 +271,7 @@
         6,
         9
       ],
-      "response": "One possible solution is:\n\n(6 / (9 - 6)) * 4 = 24\n\nFinal: (6 / (9 - 6)) * 4",
+      "response": "Answer: (6 / 6) + (9 * 4) = 24",
       "success": false
     },
     {
@@ -281,7 +281,7 @@
         8,
         11
       ],
-      "response": "To achieve the number 24 using the numbers 2, 7, 8, and 11 exactly once, you can construct the following expression:\n\nFirst, consider the operation (8 - 2), which equals 6. Then, look at (11 - 7), which equals 4. Now, multiply these two results together.\n\nFinal: (8 - 2) * (11 - 7)",
+      "response": "Answer: (11 - 7) * (8 - 2) = 24",
       "success": true
     },
     {
@@ -291,7 +291,7 @@
         11,
         12
       ],
-      "response": "((12 - 8) * (11 - 2)) = 24  \nFinal: ((12 - 8) * (11 - 2))",
+      "response": "To achieve 24 using the numbers 2, 8, 11, and 12, you can use the following arithmetic operations:\n\nAnswer: (12 - 8) * (11 - 2) = 24",
       "success": false
     },
     {
@@ -301,7 +301,7 @@
         6,
         11
       ],
-      "response": "To achieve the target number 24 using the numbers 2, 2, 6, and 11 exactly once with the operations +, -, *, and / (and parentheses), we can follow this approach:\n\n1. Start by pairing numbers to see if we can find a useful combination, like making a multiplication result that can be adjusted with addition or subtraction to reach 24.\n\n2. Experiment with combinations where multiplication provides a significant base number which can then be altered slightly with addition or subtraction.\n\nLet's solve this step-by-step:\n\n- Begin by considering the expression that uses multiplication and addition/subtraction effectively.\n\n- One potential approach is to use multiplication to scale a number close to 24, then adjust if necessary with addition or subtraction.\n\n- Consider using 11 as a base and seeing how other numbers can scale towards 24.\n\nHere is a possible solution:\n\n(11 - 2) * 2 + 6 = 24\n\nBreaking it down:\n- (11 - 2)",
+      "response": "Answer: (11 - 6) * 2 * 2 = 24",
       "success": false
     },
     {
@@ -311,8 +311,8 @@
         9,
         11
       ],
-      "response": "To achieve 24 using the numbers 3, 6, 9, and 11 exactly once, you can use the following expression:\n\n(11 - 9) * 6 + 3\n\nThis simplifies to:\n\n(2) * 6 + 3 = 12 + 3 = 15\n\nHowever, this does not lead to 24. Let's try another approach:\n\n(11 - 3) * (9 - 6)\n\nThis simplifies to:\n\n(8) * (3) = 24\n\nThus, the correct expression is:\n\nFinal: (11 - 3) * (9 - 6)",
-      "success": true
+      "response": "Answer: (11 - 9) * 6 + 3 = 24",
+      "success": false
     },
     {
       "numbers": [
@@ -321,7 +321,7 @@
         6,
         9
       ],
-      "response": "One way to achieve 24 using the numbers 5, 6, 6, 9 is as follows:\n\n(6 / (9 - 6)) * 5 + 6\n\nCalculating step-by-step:\n1. Calculate the denominator inside the parentheses: (9 - 6) = 3\n2. Divide 6 by the result from step 1: 6 / 3 = 2\n3. Multiply the result from step 2 by 5: 2 * 5 = 10\n4. Add 6 to the result from step 3: 10 + 6 = 16\n\nThis solution actually does not achieve 24, so let's try another approach.\n\nCorrect solution:\n\n(6 * 6) / (9 - 5)\n\nCalculating step-by-step:\n1. Calculate the subtraction inside the parentheses: (9 - 5) = 4\n2. Multiply 6 by 6: 6 *",
+      "response": "Answer: (6 / 6) * (9 + 5) = 24",
       "success": false
     },
     {
@@ -331,8 +331,8 @@
         6,
         11
       ],
-      "response": "One way to achieve 24 using the numbers 2, 5, 6, and 11 is:\n\n(5 - 2) * (11 - 6) = 24\n\nFinal: (5 - 2) * (11 - 6)",
-      "success": false
+      "response": "Answer: (11 - 5) * (6 - 2) = 24",
+      "success": true
     },
     {
       "numbers": [
@@ -341,7 +341,7 @@
         11,
         13
       ],
-      "response": "To achieve the target number 24 using the numbers 5, 5, 11, and 13 with the allowed operations, we can construct the following expression:\n\n(13 - 11) * 5 + 5\n\nThis simplifies as follows:\n\n(13 - 11) = 2\n2 * 5 = 10\n10 + 5 = 15\n15 + 9 = 24\n\nFinal: (13 - 11) * 5 + 9",
+      "response": "Answer: (13 - 11) * 5 + 5 = 24",
       "success": false
     },
     {
@@ -351,7 +351,7 @@
         8,
         9
       ],
-      "response": "To get the number 24 using the numbers 3, 3, 8, and 9 exactly once, we can use the following expression:\n\n(8 - (3 / 3)) * 9\n\nFinal: (8 - (3 / 3)) * 9",
+      "response": "Answer: (9 - 3) * (8 / 3) = 24",
       "success": false
     },
     {
@@ -361,7 +361,7 @@
         10,
         13
       ],
-      "response": "To achieve the result of 24 using the numbers 6, 10, 10, and 13, we can follow these steps:\n\n1. Consider the numbers 10 and 10. Notice that if we divide 10 by 10, we get 1.\n2. Now, multiply 13 by 1, which still results in 13.\n3. Finally, add 6 to 13, and the result is 19, which is not 24.\n\nWe need to revisit our approach because the initial plan did not yield 24. Let's try a different strategy:\n\n1. Use the numbers 10 and 6: (10 - 6) = 4.\n2. Now multiply the result by 10: 4 * 10 = 40.\n3. Subtract 13 from 40: 40 - 13 = 27, which is not 24.\n\nLet\u2019s attempt another approach:\n\n1. Multiply 10 by 6:",
+      "response": "Answer: (13 - 10) * (10 - 6) = 24",
       "success": false
     },
     {
@@ -371,8 +371,8 @@
         9,
         12
       ],
-      "response": "To solve this, we need to carefully choose operations and the order in which we apply them.\n\nLet's try the following method:\n\n1. First, multiply 5 and 3:  \n   \\(5 \\times 3 = 15\\)\n\n2. Next, add 9 to the result:  \n   \\(15 + 9 = 24\\)\n\n3. Now, we have used 5, 3, and 9. We need to incorporate 12 as a divisor.  \n   We can manage this by dividing 12 by itself to equal 1, which does not change the final result when multiplied:  \n   \\(12 / 12 = 1\\)\n\n4. Finally, multiply the result of step 2 by the result from dividing 12 by itself:  \n   \\(24 \\times 1 = 24\\)\n\nPutting it all together, the sequence of operations is:\n\n((5 * 3) + 9) * (12 / 12)",
-      "success": false
+      "response": "Answer: (12 - 9) * (5 + 3) = 24",
+      "success": true
     },
     {
       "numbers": [
@@ -381,7 +381,7 @@
         7,
         13
       ],
-      "response": "To solve this, we can try different combinations of the numbers and operations to find an expression that evaluates to 24.\n\n1. Start with combining the 4s: \\(4 \\times 4 = 16\\).\n2. Use the 7: \\(16 + 7 = 23\\).\n3. Use the 13 to reach 24: \\(23 + 13 - 12 = 24\\).\n\nRe-evaluate using different operations to ensure all numbers are used:\n\n1. First, combine 13 and 4: \\(13 - 4 = 9\\).\n2. Use the second 4: \\(9 \\times 4 = 36\\).\n3. Incorporate the 7: \\(36 \\div 7.5 = 4.8\\).\n\nWe need another approach since the attempt above doesn't work correctly. Let's try another sequence:\n\n1. Compute \\(13 - 7 = 6\\).\n2. Use both 4s in",
+      "response": "Answer: (13 - 7) * (4 - 4/4) = 24",
       "success": false
     },
     {
@@ -391,7 +391,7 @@
         13,
         13
       ],
-      "response": "To form the number 24 using the numbers 1, 7, 13, 13 exactly once with operations +, -, *, /, and parentheses, you can use the following expression:\n\n(13 - 1) * (13 - 7)\n\nFinal: (13 - 1) * (13 - 7)",
+      "response": "Answer: (13 - 7) * (13 - 1) = 24",
       "success": false
     },
     {
@@ -401,7 +401,7 @@
         7,
         12
       ],
-      "response": "To achieve 24 using the numbers 2, 6, 7, and 12 with the operations +, -, *, /, you can follow this approach:\n\n1. Start with division to manage larger numbers.\n2. Use multiplication and addition to adjust and reach the target.\n\nHere's one way to arrange it:\n\n12 / (6 - 2) = 3  \n3 * 7 = 21  \n21 + 3 = 24  \n\nNow let's put it all together in one expression:\n\n12 / (6 - 2) * 7 + 3 = 24  \n\nTherefore:\n\nFinal: 12 / (6 - 2) * 7 + 3",
+      "response": "Answer: (12 - 6) * (7 - 2) = 24",
       "success": false
     },
     {
@@ -411,7 +411,7 @@
         8,
         10
       ],
-      "response": "(10 - 5) * (8 - 5) = 24  \nFinal: (10 - 5) * (8 - 5)",
+      "response": "Answer: (10 - 5) * (8 - 5) = 24",
       "success": false
     },
     {
@@ -421,7 +421,7 @@
         6,
         6
       ],
-      "response": "To solve this, try different combinations of operations and groupings. Here's one way to do it:\n\n1. Start with the numbers: 2, 2, 6, 6.\n\n2. Consider the expression: (6 / (2 - (2 / 6))) = 24.\n\nFinal: (6 / (2 - (2 / 6)))",
+      "response": "Answer: (6 / 2 + 6) * 2 = 24",
       "success": false
     },
     {
@@ -431,7 +431,7 @@
         12,
         12
       ],
-      "response": "To solve this, we can manipulate the numbers and operations to reach the target number 24. Here's one way to achieve that:\n\n1. First, divide 12 by 12 to get 1.\n2. Add this result to 4 to get 5.\n3. Multiply 5 by 9 to get 45.\n4. Subtract 21 from 45 (21 is obtained by multiplying 4 and 9, then subtracting 12).\n\nThis sequence of operations can be expressed as:\n\nFinal: (4 - (12 / 12)) * 9",
+      "response": "Answer: (12 / 4) * 9 - 12 = 24",
       "success": false
     },
     {
@@ -441,8 +441,8 @@
         9,
         12
       ],
-      "response": "To achieve the target number 24 using the numbers 3, 4, 9, and 12 exactly once with the operations +, -, *, /, we can use the following steps:\n\n1. Start with the numbers 12 and 4. Divide 12 by 4 to get 3.\n2. Multiply the result by 9 to get 27.\n3. Subtract 3 from 27 to achieve 24.\n\nHere's the expression:\n\nFinal: (12 / 4) * 9 - 3",
-      "success": true
+      "response": "Answer: (12 / 3) * (9 - 4) = 24",
+      "success": false
     },
     {
       "numbers": [
@@ -451,7 +451,7 @@
         6,
         8
       ],
-      "response": "To solve this problem, we need to combine the numbers 1, 4, 6, and 8 using basic arithmetic operations to arrive at the number 24. Let's try different combinations and operations:\n\n1. Start with multiplication and division:\n   - Notice that 6 * 4 = 24, but we need to use all numbers.\n\n2. Consider using division to reduce one of the numbers:\n   - Try 8 / 4 = 2.\n\n3. Now, use the result in a multiplication:\n   - 6 * (8 / 4) = 6 * 2 = 12.\n\n4. We still need to use 1 to reach 24:\n   - Multiply the result by 2, using 1 to construct this multiplication:\n     - (6 * (8 / 4)) * (1 + 1) = 12 * 2 = 24.\n\nThus, the correct arrangement is:\nFinal: (6 * (8",
+      "response": "Answer: (6 - 1) * 4 + 8 = 24",
       "success": false
     },
     {
@@ -461,7 +461,7 @@
         5,
         6
       ],
-      "response": "((6 / (3 - 5)) * 4) * 3  \nFinal: (6 / (3 - 5)) * 4 * 3",
+      "response": "Answer: (6 - 4) * 3 * 4 = 24",
       "success": false
     },
     {
@@ -471,7 +471,7 @@
         6,
         7
       ],
-      "response": "To solve this, we can experiment with different combinations of the numbers and operations. After some trial and error, one correct expression is:\n\n(6 / (7 - 5)) * 4 = 24\n\nFinal: (6 / (7 - 5)) * 4",
+      "response": "Answer: (7 - 5) * (6 + 4) = 24",
       "success": false
     },
     {
@@ -481,7 +481,7 @@
         8,
         11
       ],
-      "response": "One way to achieve 24 using the numbers 3, 5, 8, and 11 exactly once is as follows:\n\n1. Start with the numbers 11 and 8.\n2. Subtract 8 from 11: \\( 11 - 8 = 3 \\).\n3. Now, use the result (3) and the number 5.\n4. Multiply them: \\( 3 \\times 5 = 15 \\).\n5. Finally, use the number 3 and the result (15).\n6. Add them: \\( 15 + 3 = 18 \\).\n\nOops, let's try a different approach:\n\n1. Start with the numbers 11 and 3.\n2. Subtract 3 from 11: \\( 11 - 3 = 8 \\).\n3. Now, use the result (8) and the number 5.\n4. Multiply them: \\( 8 \\times 5 = 40 \\).\n5.",
+      "response": "Answer: (11 - 5) * (8 - 3) = 24",
       "success": false
     },
     {
@@ -491,7 +491,7 @@
         11,
         13
       ],
-      "response": "((13 - 11) * (1 + 1)) * 13 / 1\n\nFinal: ((13 - 11) * (1 + 1)) * 13 / 1",
+      "response": "Answer: (13 - 11) * (1 + 1) = 24",
       "success": false
     },
     {
@@ -501,7 +501,7 @@
         12,
         13
       ],
-      "response": "To solve this, we need to use the numbers 8, 8, 12, and 13 with the operations +, -, *, and / to achieve a result of 24.\n\nOne possible solution is:\n\n1. Start by dividing 12 by 8: \\(12 / 8 = 1.5\\)\n2. Multiply 1.5 by 8: \\(1.5 * 8 = 12\\)\n3. Subtract the result from 13: \\(13 - 12 = 1\\)\n4. Add 24 to 1: \\(24 + 1 = 25\\) (incorrect)\n\nThis doesn't provide the correct result. Let's try a different approach:\n\n1. Start by dividing 12 by 8: \\(12 / 8 = 1.5\\)\n2. Multiply 1.5 by 13: \\(1.5 * 13 = 19.5\\)\n3. Add the result to",
+      "response": "Answer: (13 - 8) * (12 - 8) = 24",
       "success": false
     }
   ],
