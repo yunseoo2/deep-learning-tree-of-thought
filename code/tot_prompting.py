@@ -250,70 +250,154 @@ def propose_next_states(state: ToTState, client: openai.OpenAI) -> List[ToTState
     return children
 
 
+# Few-shot evaluator prompt. Demonstrates the kind of mini-derivation we want
+# the model to do before committing to a label, and calibrates each label.
+_VALUE_SYSTEM = (
+    "You evaluate partial states for the Game of 24. Given remaining numbers "
+    "(integers or fractions like a/b), reason briefly about whether 24 is still "
+    "reachable using +, -, *, / and parentheses, using each number exactly once. "
+    "End your response with a single label on its own line: sure, likely, or impossible."
+)
+
+_VALUE_FEWSHOT = [
+    # 2 numbers: directly reachable
+    ("10 14",
+     "10 + 14 = 24\nsure"),
+    # 2 numbers: not reachable
+    ("3 7",
+     "3 + 7 = 10\n7 - 3 = 4\n3 * 7 = 21\n3 / 7 ≈ 0.43\nNone of these are 24.\nimpossible"),
+    # 2 numbers: clean fraction case
+    ("2/3 36",
+     "36 * (2/3) = 24\nsure"),
+    # 2 numbers: hopeless fractional case
+    ("5/6 16",
+     "16 + 5/6 ≈ 16.83\n16 - 5/6 ≈ 15.17\n16 * 5/6 ≈ 13.33\n16 / (5/6) = 19.2\nNone are 24.\nimpossible"),
+    # 3 numbers: solvable
+    ("4 6 10",
+     "(10 - 4) * (6 - ...) — try 4 * 6 = 24, then need to use 10... not direct.\n"
+     "10 - 4 = 6, then 6 * 6 = ... can't reuse.\n"
+     "(10 + 4 - 6) = 8 — no.\n"
+     "Within range, plausible.\nlikely"),
+    # 3 numbers: too small
+    ("1 2 3",
+     "1 + 2 + 3 = 6\n1 * 2 * 3 = 6\n(1 + 2) * 3 = 9\nAll combinations stay small.\nimpossible"),
+    # 3 numbers: too big
+    ("10 11 12",
+     "10 + 11 + 12 = 33\n12 - 11 + 10 = 11\n(12 - 10) * 11 = 22\n(11 - 10) * 12 = 12\n"
+     "Cannot bring all three to 24.\nimpossible"),
+]
+
+
+# Zero-shot evaluator system prompt — used for the ablation study to quantify
+# how much the few-shot demonstrations matter. Same task, no demos, no chain.
+_VALUE_SYSTEM_ZEROSHOT = (
+    "You are an evaluator for the Game of 24.\n"
+    "Given a multiset of remaining numbers (integers or fractions like a/b), judge "
+    "whether they can still reach 24 using only +, -, *, / and parentheses, "
+    "using each number exactly once.\n"
+    "Respond with exactly one token: sure, likely, or impossible."
+)
+
+
+def _build_value_messages(nums_str: str, mode: str = "fewshot") -> list:
+    if mode == "zeroshot":
+        return [
+            {"role": "system", "content": _VALUE_SYSTEM_ZEROSHOT},
+            {"role": "user", "content": f"Remaining numbers: {nums_str}\nJudgement:"},
+        ]
+    msgs: list = [{"role": "system", "content": _VALUE_SYSTEM}]
+    for ex_input, ex_output in _VALUE_FEWSHOT:
+        msgs.append({"role": "user", "content": f"Remaining: {ex_input}"})
+        msgs.append({"role": "assistant", "content": ex_output})
+    msgs.append({"role": "user", "content": f"Remaining: {nums_str}"})
+    return msgs
+
+
+def _parse_judgement(text: str) -> str | None:
+    """Extract the final label from the model's response. Look at the last
+    non-empty line first, then fall back to keyword search."""
+    lines = [ln.strip().lower() for ln in (text or "").splitlines() if ln.strip()]
+    last = lines[-1] if lines else ""
+    for key in ("sure", "likely", "impossible"):
+        if key == last or last.endswith(key) or last.startswith(key):
+            return key
+    full = " ".join(lines)
+    for key in ("impossible", "sure", "likely"):
+        if key in full:
+            return key
+    if "possible" in full or "maybe" in full or "uncertain" in full:
+        return "likely"
+    if "cannot" in full or "can't" in full or "not possible" in full:
+        return "impossible"
+    return None
+
+
+def _get_value_cache(client: openai.OpenAI) -> dict:
+    """Per-client cache of (state_key, n_samples) -> score. Avoids re-calling
+    the evaluator for states that recur across the beam."""
+    cache = getattr(client, "_tot_value_cache", None)
+    if cache is None:
+        cache = {}
+        try:
+            setattr(client, "_tot_value_cache", cache)
+        except Exception:
+            pass
+    return cache
+
+
 def value_state(
     state: ToTState,
     client: openai.OpenAI,
     n_samples: int = 3,
+    evaluator_mode: str = "fewshot",
 ) -> float:
     """
     Prompt the LLM `n_samples` times to judge whether `state.remaining` can
     still reach 24 (sure / likely / impossible). Map each judgement to a number
-    (paper uses sure=20, likely=1, impossible=0.001) and return the sum.
+    (paper: sure=20, likely=1, impossible=0.001) and return the sum.
 
-    Expected return: float score (higher is better).
+    Higher score = more promising state. Results are cached per client across
+    the experiment, since identical multisets recur across beam expansions.
+
+    `evaluator_mode` is "fewshot" (default, used for headline ToT results) or
+    "zeroshot" (ablation only).
     """
     if n_samples <= 0:
         return 0.0
 
-    # Terminal checks (avoid an API call when we already know the answer).
+    # Terminal: skip API call when we already know the answer.
     if len(state.remaining) == 1:
         return 20.0 * n_samples if state.remaining[0] == 24 else 0.001 * n_samples
 
-    # Paper mapping (ToT / Game of 24): sure=20, likely=1, impossible=0.001
     weights = {"sure": 20.0, "likely": 1.0, "impossible": 0.001}
 
-    def _parse_judgement(text: str) -> str | None:
-        t = (text or "").strip().lower()
-        # Prefer explicit labels first.
-        for key in ("sure", "likely", "impossible"):
-            if key in t:
-                return key
-        # Handle common synonyms / formatting variants.
-        if "possible" in t:
-            return "likely"
-        if "maybe" in t or "uncertain" in t:
-            return "likely"
-        if "can't" in t or "cannot" in t or "not possible" in t:
-            return "impossible"
-        return None
+    nums_str = " ".join(_fmt_num(n) for n in state.remaining)
+    cache = _get_value_cache(client)
+    cache_key = (evaluator_mode, nums_str, n_samples)
+    if cache_key in cache:
+        return cache[cache_key]
 
-    system = (
-        "You are an evaluator for the Game of 24.\n"
-        "Given a multiset of remaining integers, judge whether it can still reach 24 "
-        "using only +, -, *, / and parentheses, using each number exactly once.\n"
-        "Respond with exactly one token: sure, likely, or impossible."
-    )
-    user = f"Remaining numbers: {list(state.remaining)}\nJudgement:"
+    messages = _build_value_messages(nums_str, mode=evaluator_mode)
+    max_tok = 200 if evaluator_mode == "fewshot" else 5
 
     score = 0.0
-    for _ in range(n_samples):
-        try:
-            response = client.chat.completions.create(
-                model="gpt-4o",
-                messages=[
-                    {"role": "system", "content": system},
-                    {"role": "user", "content": user},
-                ],
-                temperature=0.7,
-                max_tokens=5,
-            )
-            content = (response.choices[0].message.content or "").strip()
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=messages,
+            temperature=0.7,
+            max_tokens=max_tok,
+            n=n_samples,
+        )
+        for choice in response.choices:
+            content = (choice.message.content or "").strip()
             label = _parse_judgement(content)
             score += weights.get(label or "", weights["impossible"])
-        except Exception:
-            # If evaluation fails (rate limit / transient error), be conservative.
-            score += weights["impossible"]
+    except Exception:
+        # Conservative fallback on transient API errors.
+        score = weights["impossible"] * n_samples
 
+    cache[cache_key] = float(score)
     return float(score)
 
 
@@ -338,15 +422,18 @@ def tot_bfs(
     client: openai.OpenAI,
     beam_size: int = 5,
     steps: int = 3,
+    evaluator_mode: str = "fewshot",
 ) -> Tuple[str, bool, Dict]:
     """
     Run the ToT BFS for a single Game-of-24 puzzle.
 
     Args:
-        numbers:    4 input integers
-        client:     OpenAI client (passed through to proposer/evaluator)
-        beam_size:  b, the number of surviving states per step (paper: 5)
-        steps:      search depth (paper: 3, reducing 4 nums -> 3 -> 2 -> 1)
+        numbers:        4 input integers
+        client:         OpenAI client (passed through to proposer/evaluator)
+        beam_size:      b, the number of surviving states per step (paper: 5)
+        steps:          search depth (paper: 3, reducing 4 nums -> 3 -> 2 -> 1)
+        evaluator_mode: "fewshot" (default, used for headline results) or
+                        "zeroshot" (ablation only).
 
     Returns:
         (final_expression, success, trace)
@@ -359,7 +446,12 @@ def tot_bfs(
 
     root = ToTState(remaining=tuple(numbers))
     frontier: List[ToTState] = [root]
-    trace: Dict = {"beam_size": beam_size, "steps": steps, "levels": []}
+    trace: Dict = {
+        "beam_size": beam_size,
+        "steps": steps,
+        "evaluator_mode": evaluator_mode,
+        "levels": [],
+    }
 
     for step in range(1, steps + 1):
         # 1. Propose: expand every state in the current frontier.
@@ -373,7 +465,10 @@ def tot_bfs(
             break
 
         # 2. Evaluate: score every child.
-        scores = [value_state(child, client) for child in proposals]
+        scores = [
+            value_state(child, client, evaluator_mode=evaluator_mode)
+            for child in proposals
+        ]
 
         # 3. Prune: keep top-b by score.
         frontier = _keep_top_b(proposals, scores, beam_size)
@@ -417,42 +512,58 @@ def run_tot_experiment(
     api_key: str,
     beam_size: int = 5,
     steps: int = 3,
+    evaluator_mode: str = "fewshot",
 ) -> Dict:
     """
     Run ToT-BFS on a list of Game of 24 problems. Result shape matches the
     IO/CoT runners so the summary code can treat all three the same way.
+
+    `evaluator_mode` is "fewshot" (default) or "zeroshot" (ablation).
+    Per-problem and total wall-clock time are recorded in the result dict.
     """
+    import time
+
     client = openai.OpenAI(api_key=api_key)
 
     results: Dict = {
         "method": "ToT-BFS",
         "beam_size": beam_size,
         "steps": steps,
+        "evaluator_mode": evaluator_mode,
         "total": len(problems),
         "successes": 0,
         "failures": 0,
         "problems": [],
     }
 
+    run_start = time.time()
+
     for i, numbers in enumerate(problems):
         print(f"Problem {i+1}/{len(problems)}: {numbers}")
+        prob_start = time.time()
 
         try:
             expression, success, trace = tot_bfs(
-                numbers, client, beam_size=beam_size, steps=steps
+                numbers,
+                client,
+                beam_size=beam_size,
+                steps=steps,
+                evaluator_mode=evaluator_mode,
             )
             error = None
         except NotImplementedError as e:
-            # Expected until Jade + Lauren land their pieces.
             expression, success, trace, error = "", False, {}, str(e)
         except Exception as e:
             expression, success, trace, error = "", False, {}, f"Error: {e}"
+
+        elapsed = time.time() - prob_start
 
         results["problems"].append(
             {
                 "numbers": numbers,
                 "expression": expression,
                 "success": success,
+                "elapsed_s": round(elapsed, 3),
                 "trace": trace,
                 "error": error,
             }
@@ -460,11 +571,16 @@ def run_tot_experiment(
 
         if success:
             results["successes"] += 1
-            print("✓ Success")
+            print(f"✓ Success ({elapsed:.1f}s)")
         else:
             results["failures"] += 1
-            print(f"✗ Failed{' (' + error + ')' if error else ''}")
+            print(f"✗ Failed{' (' + error + ')' if error else ''} ({elapsed:.1f}s)")
 
+    total_elapsed = time.time() - run_start
+    results["total_elapsed_s"] = round(total_elapsed, 3)
+    results["avg_elapsed_s"] = (
+        round(total_elapsed / len(problems), 3) if problems else 0.0
+    )
     results["success_rate"] = (
         results["successes"] / results["total"] if results["total"] else 0.0
     )

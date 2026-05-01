@@ -1,6 +1,10 @@
 """
-IO (Input-Output) Prompting for Game of 24
-Single prompt asking for direct answer without intermediate reasoning.
+IO (Input-Output) Prompting for Game of 24.
+
+5-shot prompt matching Yao et al. 2023 (ToT paper, Section 4.1, Baselines).
+The 5 in-context examples are the same ones used in the paper's released
+prompts (`tree-of-thought-llm/src/tot/prompts/game24.py`), kept verbatim so
+this baseline can be compared apples-to-apples with the paper's IO numbers.
 """
 
 import openai
@@ -12,9 +16,26 @@ from dotenv import load_dotenv
 from validation import validate_24_expression
 
 
+# 5-shot prompt template, copied from the paper's released code so the baseline
+# matches the paper's IO setup. Demo puzzles are disjoint from our test set.
+IO_PROMPT_TEMPLATE = """Use numbers and basic arithmetic operations (+ - * /) to obtain 24.
+Input: 4 4 6 8
+Answer: (4 + 8) * (6 - 4) = 24
+Input: 2 9 10 12
+Answer: 2 * 12 * (10 - 9) = 24
+Input: 4 9 10 13
+Answer: (13 - 9) * (10 - 4) = 24
+Input: 1 4 8 8
+Answer: (8 / 4 + 1) * 8 = 24
+Input: 5 5 5 9
+Answer: 5 + 5 + 5 + 9 = 24
+Input: {input}
+"""
+
+
 def io_prompt(numbers: List[int], api_key: str) -> Tuple[str, bool]:
     """
-    Run IO prompting: direct question to direct answer.
+    Run IO prompting (5-shot, paper-faithful): direct question to direct answer.
 
     Args:
         numbers: List of 4 integers for the Game of 24
@@ -25,13 +46,8 @@ def io_prompt(numbers: List[int], api_key: str) -> Tuple[str, bool]:
     """
     client = openai.OpenAI(api_key=api_key)
 
-    prompt = (
-        f"Use each of the numbers {numbers[0]}, {numbers[1]}, {numbers[2]}, {numbers[3]} "
-        f"exactly once with operations +, -, *, / (and parentheses) to get 24.\n"
-        f"End your response with a line of exactly this form:\n"
-        f"Final: <expression>\n"
-        f"The expression must use only integers, + - * /, and parentheses. No LaTeX, no words."
-    )
+    nums_str = " ".join(str(n) for n in numbers)
+    prompt = IO_PROMPT_TEMPLATE.format(input=nums_str)
 
     try:
         response = client.chat.completions.create(
@@ -54,13 +70,6 @@ def io_prompt(numbers: List[int], api_key: str) -> Tuple[str, bool]:
 def run_io_experiment(problems: List[List[int]], api_key: str) -> Dict:
     """
     Run IO prompting on a list of Game of 24 problems.
-
-    Args:
-        problems: List of problems, each is a list of 4 integers
-        api_key: OpenAI API key
-
-    Returns:
-        Dictionary with results including success rate and detailed logs
     """
     results = {
         "method": "IO",
@@ -101,9 +110,9 @@ if __name__ == "__main__":
     if not api_key:
         raise ValueError("Please set OPENAI_API_KEY in .env file")
 
-    # Test with a few examples
+    # Note: avoiding the 5 demo puzzles to prevent leakage in the smoke test.
     test_problems = [
-        [4, 9, 10, 13],
+        [3, 3, 12, 12],
         [1, 4, 5, 6],
         [2, 3, 5, 12]
     ]
@@ -111,11 +120,10 @@ if __name__ == "__main__":
     results = run_io_experiment(test_problems, api_key)
 
     print("="*50)
-    print(f"IO Prompting Results")
+    print(f"IO Prompting Results (5-shot)")
     print(f"Success Rate: {results['success_rate']:.2%}")
     print(f"Successes: {results['successes']}/{results['total']}")
     print("="*50)
 
-    # Save results
     with open("io_results.json", "w") as f:
         json.dump(results, f, indent=2)
