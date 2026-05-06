@@ -24,11 +24,10 @@ FIGS = RESULTS / "figures"
 FIGS.mkdir(parents=True, exist_ok=True)
 
 
-# ----- color palette (color-blind friendly, also looks good on a poster) -----
-C_PAPER = "#999999"   # gray for paper baselines
-C_IO = "#4C72B0"      # blue
-C_COT = "#DD8452"     # orange
-C_TOT = "#55A868"     # green
+C_PAPER = "#999999"   
+C_IO = "#4C72B0"     
+C_COT = "#DD8452"    
+C_TOT = "#55A868"     
 C_FEWSHOT = "#55A868"
 C_ZEROSHOT = "#C44E52"
 
@@ -91,13 +90,11 @@ def fig_success_rate():
 # ---------------------------------------------------------------------------
 def fig_cost_time():
     methods = ["IO", "CoT", "ToT"]
-    cost_per_problem = [0.0024, 0.0022, 0.102]   # $
-    time_per_problem = [1.2, 1.3, 86.0]           # seconds
-    cost_per_correct = [0.024, 0.0093, 0.116]    # $
-    success = [10.0, 24.0, 88.0]                  # %
+    cost_per_problem = [0.0024, 0.0022, 0.102]   
+    time_per_problem = [1.2, 1.3, 86.0]          
+    cost_per_correct = [0.024, 0.0093, 0.116]    
+    success = [10.0, 24.0, 88.0]                  
 
-    # light-greens palette: pale → mid → deep, so ToT (the expensive one)
-    # naturally reads as the heaviest bar
     light_green = "#D9EBD9"
     mid_green = "#8FC78F"
     deep_green = "#3E8E5A"
@@ -105,7 +102,7 @@ def fig_cost_time():
 
     fig, axes = plt.subplots(1, 3, figsize=(14, 4.8))
 
-    # --- (a) cost per problem (log scale)
+    # (a) cost per problem (log scale)
     ax = axes[0]
     bars = ax.bar(methods, cost_per_problem, color=colors,
                   edgecolor="black", linewidth=1.0)
@@ -120,7 +117,7 @@ def fig_cost_time():
     ax.grid(axis="y", alpha=0.3, which="both")
     ax.set_axisbelow(True)
 
-    # --- (b) time per problem (log scale)
+    # b) time per problem (log scale)
     ax = axes[1]
     bars = ax.bar(methods, time_per_problem, color=colors,
                   edgecolor="black", linewidth=1.0)
@@ -134,7 +131,7 @@ def fig_cost_time():
     ax.grid(axis="y", alpha=0.3, which="both")
     ax.set_axisbelow(True)
 
-    # --- (c) cost per CORRECT answer — the real story
+    # (c) cost per CORRECT answer 
     ax = axes[2]
     bars = ax.bar(methods, cost_per_correct, color=colors,
                   edgecolor="black", linewidth=1.0)
@@ -246,14 +243,12 @@ def fig_methodology_table():
     table.auto_set_font_size(False)
     table.set_fontsize(13)
 
-    # row heights — taller for the ToT row since it has 4 lines
     row_heights = [0.16, 0.18, 0.42]
     for i, h in enumerate(row_heights, start=1):
         for j in range(len(headers)):
             cell = table[i, j]
             cell.set_height(h)
 
-    # header style
     for j in range(len(headers)):
         cell = table[0, j]
         cell.set_facecolor(header_green)
@@ -262,7 +257,6 @@ def fig_methodology_table():
         cell.set_linewidth(1.2)
         cell.set_height(0.10)
 
-    # body style — alternating green tints, bold method name
     for i, (method, _) in enumerate(rows, start=1):
         bg = light_green if i % 2 else mid_green
         for j in range(len(headers)):
@@ -270,9 +264,7 @@ def fig_methodology_table():
             cell.set_facecolor(bg)
             cell.set_edgecolor("black")
             cell.set_linewidth(1.0)
-            # left padding
             cell.PAD = 0.04
-        # bold the method name
         table[i, 0].set_text_props(weight="bold", size=14)
 
     ax.set_title("Methodology — three prompting conditions",
@@ -302,10 +294,10 @@ def fig_comparison_grid():
     ax.set_aspect("equal")
     ax.axis("off")
 
-    color_both = "#55A868"        # green
-    color_fs_only = "#4C72B0"     # blue
-    color_neither = "#CCCCCC"     # gray
-    color_zs_only = "#DD8452"     # orange (won't appear, but in legend)
+    color_both = "#55A868"      
+    color_fs_only = "#4C72B0"     
+    color_neither = "#CCCCCC"     
+    color_zs_only = "#DD8452"    
 
     for i, (fp, zp) in enumerate(zip(fs["problems"], zs["problems"])):
         col = i % cols
