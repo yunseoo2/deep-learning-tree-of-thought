@@ -1,14 +1,14 @@
 """
-Evaluator ablation: zero-shot vs. few-shot evaluator on the same 20 puzzles.
+Evaluator comparison: zero-shot vs. few-shot evaluator on the same 20 puzzles.
 
-This is our independent contribution beyond the paper — Yao et al. used a
-few-shot evaluator throughout and did not ablate it. We hold every other
-variable fixed (same puzzles, same proposer, same beam size, same depth) and
-toggle only the evaluator prompt.
+This is our independent contribution beyond the paper. Yao et al. used a
+few-shot evaluator throughout and did not compare it against alternatives. We
+hold every other variable fixed (same puzzles, same proposer, same beam size,
+same depth) and toggle only the evaluator prompt.
 
 Outputs (does NOT touch the headline tot_results.json):
-  - results/tot_eval_ablation_fewshot_20.json
-  - results/tot_eval_ablation_zeroshot_20.json
+  - results/tot_eval_comparison_fewshot_20.json
+  - results/tot_eval_comparison_zeroshot_20.json
 """
 
 import json
@@ -31,7 +31,7 @@ def main():
 
     data_path = "../data/test_puzzles_50.csv"
     problems = load_problems(data_path, num_problems=N_PROBLEMS)
-    print(f"Loaded {len(problems)} problems for evaluator ablation\n")
+    print(f"Loaded {len(problems)} problems for evaluator comparison\n")
 
     summary = {}
 
@@ -49,7 +49,7 @@ def main():
             evaluator_mode=mode,
         )
 
-        out_path = f"../results/tot_eval_ablation_{mode}_{N_PROBLEMS}.json"
+        out_path = f"../results/tot_eval_comparison_{mode}_{N_PROBLEMS}.json"
         with open(out_path, "w") as f:
             json.dump(results, f, indent=2)
 
@@ -74,7 +74,7 @@ def main():
         }
 
     print("=" * 60)
-    print("EVALUATOR ABLATION SUMMARY")
+    print("EVALUATOR COMPARISON SUMMARY")
     print("=" * 60)
     for mode, s in summary.items():
         print(

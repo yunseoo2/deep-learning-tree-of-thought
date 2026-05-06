@@ -29,7 +29,7 @@ def load_problems(csv_path: str, num_problems: int = 50):
             if i >= num_problems:
                 break
 
-            # Parse the "Puzzles" column which has format "1 2 3 4"
+            # parse the "Puzzles" column which has format "1 2 3 4"
             puzzle_str = row['Puzzles']
             numbers = [int(x) for x in puzzle_str.split()]
 

@@ -131,7 +131,7 @@ if __name__ == "__main__":
     if not api_key:
         raise ValueError("Please set OPENAI_API_KEY in .env file")
 
-    # Note: avoiding the 5 demo puzzles to prevent leakage in the smoke test.
+    # Avoiding the 5 demo puzzles to prevent leakage in the smoke test.
     test_problems = [
         [3, 3, 12, 12],
         [1, 4, 5, 6],

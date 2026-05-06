@@ -1,13 +1,5 @@
 """
-ToT (Tree of Thoughts) Prompting for Game of 24 — BFS scaffolding.
-
-This module owns the search loop only. The two prompt-dependent pieces are
-stubbed out for teammates to fill in:
-
-  - propose_next_states  (Jade — thought proposer prompt)
-  - value_state          (Lauren — evaluator prompt, sure/maybe/impossible)
-
-Once both stubs are implemented, run_tot_experiment will work end-to-end.
+ToT (Tree of Thoughts) Prompting for Game of 24 via BFS.
 """
 
 from __future__ import annotations
@@ -70,7 +62,6 @@ def _to_frac(n) -> Fraction:
             return Fraction(s).limit_denominator(10**6)
         except ValueError:
             return Fraction(float(s)).limit_denominator(10**6)
-    # float
     return Fraction(str(round(float(n), 10))).limit_denominator(10**6)
 
 
@@ -94,7 +85,6 @@ def _get_exprs(state: ToTState) -> List[str]:
         parts = state.expression.split("|")
         if len(parts) == len(state.remaining):
             return parts
-    # Root state or fallback: each remaining number is its own literal.
     return [_fmt_num(n) for n in state.remaining]
 
 
@@ -185,7 +175,7 @@ def propose_next_states(state: ToTState, client: openai.OpenAI) -> List[ToTState
             a_frac = _to_frac(m.group(1))
             op = m.group(2)
             b_frac = _to_frac(m.group(3))
-            # Ignore the LLM's claimed result; recompute from scratch.
+            # Ignore the LLM's claimed result, recompute from scratch.
             if op == "+":
                 result_frac = a_frac + b_frac
             elif op == "-":
@@ -201,12 +191,10 @@ def propose_next_states(state: ToTState, client: openai.OpenAI) -> List[ToTState
         except (ValueError, ZeroDivisionError):
             continue
 
-        # Locate a in remaining.
         a_idx = next((i for i, v in enumerate(rem_fracs) if v == a_frac), None)
         if a_idx is None:
             continue
 
-        # Locate b in remaining, skipping the a position.
         b_idx = next(
             (i for i, v in enumerate(rem_fracs) if i != a_idx and v == b_frac),
             None,
@@ -250,8 +238,7 @@ def propose_next_states(state: ToTState, client: openai.OpenAI) -> List[ToTState
     return children
 
 
-# Few-shot evaluator prompt. Demonstrates the kind of mini-derivation we want
-# the model to do before committing to a label, and calibrates each label.
+# Few-shot evaluator prompt
 _VALUE_SYSTEM = (
     "You evaluate partial states for the Game of 24. Given remaining numbers "
     "(integers or fractions like a/b), reason briefly about whether 24 is still "
@@ -288,8 +275,9 @@ _VALUE_FEWSHOT = [
 ]
 
 
-# Zero-shot evaluator system prompt — used for the ablation study to quantify
-# how much the few-shot demonstrations matter. Same task, no demos, no chain.
+# Zero-shot evaluator system prompt. Used for the comparison study to
+# quantify how much the few-shot demonstrations matter. Same task, no demos,
+# no chain.
 _VALUE_SYSTEM_ZEROSHOT = (
     "You are an evaluator for the Game of 24.\n"
     "Given a multiset of remaining numbers (integers or fractions like a/b), judge "
@@ -360,12 +348,12 @@ def value_state(
     the experiment, since identical multisets recur across beam expansions.
 
     `evaluator_mode` is "fewshot" (default, used for headline ToT results) or
-    "zeroshot" (ablation only).
+    "zeroshot" (comparison only).
     """
     if n_samples <= 0:
         return 0.0
 
-    # Terminal: skip API call when we already know the answer.
+    # Skip API call when we already know the answer.
     if len(state.remaining) == 1:
         return 20.0 * n_samples if state.remaining[0] == 24 else 0.001 * n_samples
 
@@ -433,7 +421,7 @@ def tot_bfs(
         beam_size:      b, the number of surviving states per step (paper: 5)
         steps:          search depth (paper: 3, reducing 4 nums -> 3 -> 2 -> 1)
         evaluator_mode: "fewshot" (default, used for headline results) or
-                        "zeroshot" (ablation only).
+                        "zeroshot" (comparison only).
 
     Returns:
         (final_expression, success, trace)
@@ -489,7 +477,7 @@ def tot_bfs(
         )
 
     # After `steps` expansions, each survivor should have 1 number left.
-    # Validate each candidate expression; a problem succeeds if any hits 24.
+    # Validate each candidate expression. A problem succeeds if any hits 24.
     best_expr = ""
     success = False
     for survivor in frontier:
@@ -518,7 +506,7 @@ def run_tot_experiment(
     Run ToT-BFS on a list of Game of 24 problems. Result shape matches the
     IO/CoT runners so the summary code can treat all three the same way.
 
-    `evaluator_mode` is "fewshot" (default) or "zeroshot" (ablation).
+    `evaluator_mode` is "fewshot" (default) or "zeroshot" (comparison).
     Per-problem and total wall-clock time are recorded in the result dict.
     """
     import time

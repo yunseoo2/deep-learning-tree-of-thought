@@ -3,8 +3,7 @@ IO (Input-Output) Prompting for Game of 24.
 
 5-shot prompt matching Yao et al. 2023 (ToT paper, Section 4.1, Baselines).
 The 5 in-context examples are the same ones used in the paper's released
-prompts (`tree-of-thought-llm/src/tot/prompts/game24.py`), kept verbatim so
-this baseline can be compared apples-to-apples with the paper's IO numbers.
+prompts (`tree-of-thought-llm/src/tot/prompts/game24.py`).
 """
 
 import openai
@@ -110,7 +109,6 @@ if __name__ == "__main__":
     if not api_key:
         raise ValueError("Please set OPENAI_API_KEY in .env file")
 
-    # Note: avoiding the 5 demo puzzles to prevent leakage in the smoke test.
     test_problems = [
         [3, 3, 12, 12],
         [1, 4, 5, 6],

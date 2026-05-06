@@ -62,8 +62,7 @@ class _SafeArithmeticEvaluator(ast.NodeVisitor):
         if isinstance(node.value, int):
             val = Fraction(node.value, 1)
         elif isinstance(node.value, float):
-            # Keep exact literal meaning; e.g. 0.1 is not representable as Fraction nicely.
-            # For our project, decimal literals are not expected; reject to be strict.
+            # Keep exact literal meaning, 0.1 is not representable as Fraction nicely.
             raise ValueError("float literals are not allowed; use integers only")
         else:
             raise ValueError("only integer literals are allowed")
@@ -101,7 +100,6 @@ def _delatex(s: str) -> str:
     for pat, repl in replacements:
         s = re.sub(pat, repl, s)
 
-    # Strip stray backslashes and LaTeX brackets.
     s = s.replace("\\[", "").replace("\\]", "")
     s = s.replace("[", "(").replace("]", ")")
     s = s.replace("{", "(").replace("}", ")")
@@ -195,7 +193,6 @@ def validate_24_expression(
     except Exception as e:
         return ValidationResult(ok=False, value=None, error=str(e))
 
-    # Multiset match on integer literals used.
     used_ints = [int(frac) for frac in evaluator.numbers]
     if any(frac.denominator != 1 for frac in evaluator.numbers):
         return ValidationResult(ok=False, value=value, error="non-integer literal detected")

@@ -1,13 +1,13 @@
 """
 Generate all poster figures from result JSON files.
 
-Outputs PNGs to ../figures/, each at 300 dpi for poster printing.
+Outputs PNGs to ../results/figures/, each at 300 dpi for poster printing.
 
 Figures:
   fig1_success_rate.png       — IO/CoT/ToT ours vs. paper (n=50)
   fig2_cost_time.png          — cost-of-correctness comparison
-  fig3_evaluator_ablation.png — few-shot vs zero-shot evaluator (n=20)
-  fig5_ablation_grid.png      — 20-cell per-puzzle outcome grid
+  fig3_evaluator_comparison.png — few-shot vs zero-shot evaluator (n=20)
+  fig5_comparison_grid.png      — 20-cell per-puzzle outcome grid
 """
 
 import json
@@ -20,8 +20,8 @@ import matplotlib.patches as mpatches
 
 REPO = Path(__file__).resolve().parents[1]
 RESULTS = REPO / "results"
-FIGS = REPO / "figures"
-FIGS.mkdir(exist_ok=True)
+FIGS = RESULTS / "figures"
+FIGS.mkdir(parents=True, exist_ok=True)
 
 
 # ----- color palette (color-blind friendly, also looks good on a poster) -----
@@ -157,69 +157,55 @@ def fig_cost_time():
 
 
 # ---------------------------------------------------------------------------
-# Figure 3: Evaluator ablation — few-shot vs zero-shot
+# Figure 3: Evaluator comparison — few-shot vs zero-shot
 # ---------------------------------------------------------------------------
-def fig_evaluator_ablation():
-    fs = _load("tot_eval_ablation_fewshot_20.json")
-    zs = _load("tot_eval_ablation_zeroshot_20.json")
+def fig_evaluator_comparison():
+    fs = _load("tot_eval_comparison_fewshot_20.json")
+    zs = _load("tot_eval_comparison_zeroshot_20.json")
 
-    # match fig2 light-greens palette: deep = few-shot (the better one),
-    # pale = zero-shot (the weaker one)
-    pale_green = "#D9EBD9"
-    deep_green = "#3E8E5A"
-    bar_colors = [deep_green, pale_green]
+    deep_green = "#3E8E5A"   # success rate (left axis)
+    pale_green = "#A8D5A8"   # avg time     (right axis)
 
-    fig, axes = plt.subplots(1, 2, figsize=(11, 5))
-
-    # --- (a) success rate
-    ax = axes[0]
     rates = [fs["success_rate"] * 100, zs["success_rate"] * 100]
     counts = [(fs["successes"], fs["total"]),
               (zs["successes"], zs["total"])]
-    bars = ax.bar(["Few-shot\n(ours)", "Zero-shot"], rates,
-                  color=bar_colors, edgecolor="black", width=0.55,
-                  linewidth=1.0)
-    for bar, val, (s, t) in zip(bars, rates, counts):
-        ax.text(bar.get_x() + bar.get_width() / 2, val + 2,
-                f"{val:.0f}%\n({s}/{t})", ha="center", fontsize=12,
-                fontweight="bold")
-    ax.set_ylabel("Success rate (%)", fontsize=12)
-    ax.set_ylim(0, 115)
-    ax.set_title("Evaluator ablation — success rate", fontsize=13)
-    ax.grid(axis="y", alpha=0.3)
-    ax.set_axisbelow(True)
-
-    # gap annotation — drawn between the two bars at x=0.5, with the
-    # label sitting to the right of the arrow's midpoint
-    gap_x = 0.5
-    arrow_lo = rates[1] + 1
-    arrow_hi = rates[0] - 1
-    ax.annotate("", xy=(gap_x, arrow_hi), xytext=(gap_x, arrow_lo),
-                arrowprops=dict(arrowstyle="<->", color="black", lw=1.8))
-    ax.text(gap_x + 0.06, (arrow_lo + arrow_hi) / 2,
-            f"{rates[0] - rates[1]:.0f} pp\ngap",
-            fontsize=12, fontweight="bold", color="black",
-            va="center", ha="left")
-
-    # --- (b) avg time per problem
-    ax = axes[1]
     times = [fs["avg_elapsed_s"], zs["avg_elapsed_s"]]
-    bars = ax.bar(["Few-shot\n(ours)", "Zero-shot"], times,
-                  color=bar_colors, edgecolor="black", width=0.55,
-                  linewidth=1.0)
-    for bar, val in zip(bars, times):
-        ax.text(bar.get_x() + bar.get_width() / 2, val + 2,
-                f"{val:.0f}s", ha="center", fontsize=12, fontweight="bold")
-    ax.set_ylabel("Avg time per problem (s)", fontsize=12)
-    ax.set_title("Time cost", fontsize=13)
-    ax.grid(axis="y", alpha=0.3)
-    ax.set_axisbelow(True)
-    ax.set_ylim(0, max(times) * 1.25)
 
-    fig.suptitle("Independent contribution: how much does the few-shot evaluator matter?",
-                 fontsize=13, y=1.00)
-    plt.tight_layout(rect=(0, 0, 1, 0.95))
-    out = FIGS / "fig3_evaluator_ablation.png"
+    labels = ["Few-shot", "Zero-shot"]
+    x = list(range(len(labels)))
+    bar_w = 0.35
+
+    fig, ax_rate = plt.subplots(figsize=(8.5, 5))
+    ax_time = ax_rate.twinx()
+
+    rate_bars = ax_rate.bar([xi - bar_w / 2 for xi in x], rates,
+                            width=bar_w, color=deep_green,
+                            edgecolor="black", linewidth=1.0)
+    time_bars = ax_time.bar([xi + bar_w / 2 for xi in x], times,
+                            width=bar_w, color=pale_green,
+                            edgecolor="black", linewidth=1.0)
+
+    for bar, val, (s, t) in zip(rate_bars, rates, counts):
+        ax_rate.text(bar.get_x() + bar.get_width() / 2, val + 2,
+                     f"{val:.0f}%\n({s}/{t})", ha="center",
+                     fontsize=12, fontweight="bold")
+    for bar, val in zip(time_bars, times):
+        ax_time.text(bar.get_x() + bar.get_width() / 2, val + 2,
+                     f"{val:.0f}s", ha="center",
+                     fontsize=12, fontweight="bold")
+
+    ax_rate.set_ylabel("Success rate (%)", fontsize=12)
+    ax_time.set_ylabel("Avg time/problem (s)", fontsize=12)
+    ax_rate.set_xticks(x)
+    ax_rate.set_xticklabels(labels, fontsize=12)
+    ax_rate.set_ylim(0, 115)
+    ax_time.set_ylim(0, max(times) * 1.25)
+    ax_rate.grid(axis="y", alpha=0.3)
+    ax_rate.set_axisbelow(True)
+    ax_rate.set_title("Evaluator Ablation: Accuracy vs. Time", fontsize=13)
+
+    plt.tight_layout()
+    out = FIGS / "fig3_evaluator_comparison.png"
     plt.savefig(out, dpi=300, bbox_inches="tight")
     plt.close()
     print(f"✓ {out}")
@@ -300,11 +286,11 @@ def fig_methodology_table():
 
 
 # ---------------------------------------------------------------------------
-# Figure 5: 20-cell ablation grid
+# Figure 5: 20-cell comparison grid
 # ---------------------------------------------------------------------------
-def fig_ablation_grid():
-    fs = _load("tot_eval_ablation_fewshot_20.json")
-    zs = _load("tot_eval_ablation_zeroshot_20.json")
+def fig_comparison_grid():
+    fs = _load("tot_eval_comparison_fewshot_20.json")
+    zs = _load("tot_eval_comparison_zeroshot_20.json")
 
     cols = 5
     rows = 4
@@ -360,7 +346,7 @@ def fig_ablation_grid():
                  fontsize=12, pad=22)
 
     plt.tight_layout()
-    out = FIGS / "fig5_ablation_grid.png"
+    out = FIGS / "fig5_comparison_grid.png"
     plt.savefig(out, dpi=300, bbox_inches="tight")
     plt.close()
     print(f"✓ {out}")
@@ -370,8 +356,8 @@ def main():
     fig_methodology_table()
     fig_success_rate()
     fig_cost_time()
-    fig_evaluator_ablation()
-    fig_ablation_grid()
+    fig_evaluator_comparison()
+    fig_comparison_grid()
     print(f"\nAll figures saved to {FIGS}")
 
 
